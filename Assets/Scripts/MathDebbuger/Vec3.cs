@@ -146,7 +146,9 @@ namespace CustomMath
         }
         public static float Distance(Vec3 a, Vec3 b)
         {
-            throw new NotImplementedException();
+            //pitagoras 
+            float distance = MathF.Sqrt(MathF.Pow((a.x - b.x), 2) + MathF.Pow((a.y - b.y), 2) + MathF.Pow((a.z - b.z), 2));
+            return distance;
         }
         public static float Dot(Vec3 a, Vec3 b)
         {
