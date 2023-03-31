@@ -6,34 +6,34 @@ using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-    float distanceABProprio;
-    float distanceABUnity;
-    public Vector3 objeto2;
+    float magP;
+    float sqrtMagP;
+
+    float magU;
+    float sqrtMagU;
+
+    Vec3 posision;
+
     void Start()
     {
+        posision.x = transform.position.x;
+        posision.y = transform.position.y;
+        posision.z = transform.position.z;
 
+        magP = Vec3.Magnitude(posision);
+        sqrtMagP = Vec3.SqrMagnitude(posision);
+
+        magU = Vector3.Magnitude(transform.position);
+        sqrtMagU = Vector3.SqrMagnitude(transform.position);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (distanceABProprio != DistanceAutoMade(transform.position, objeto2))
-        {
-            distanceABProprio = DistanceAutoMade(transform.position, objeto2);
-            print("Proprio = " + distanceABProprio);
-        }
+        print("Magnitud P = " + magP);
+        print("SqrtMagnitud P = " + sqrtMagP);
 
-        if (distanceABUnity != Vector3.Distance(transform.position, objeto2))
-        {
-            distanceABUnity = Vector3.Distance(transform.position, objeto2);
-            print("Unity = " + distanceABUnity);
-        }
-    }
-
-    public static float DistanceAutoMade(Vector3 a, Vector3 b)
-    {
-        //pitagoras 
-        float distance = MathF.Sqrt(MathF.Pow((a.x - b.x), 2) + MathF.Pow((a.y - b.y), 2) + MathF.Pow((a.z - b.z), 2));
-        return distance;
+        print("Magnitud U = " + magU);
+        print("SqrtMagnitud U = " + sqrtMagU);
     }
 }

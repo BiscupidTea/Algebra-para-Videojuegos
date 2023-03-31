@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Runtime.Serialization;
+
 namespace CustomMath
 {
+    [Serializable]
     public struct Vec3 : IEquatable<Vec3>
     {
         #region Variables
@@ -11,9 +14,9 @@ namespace CustomMath
         public float y;
         public float z;
 
-        public float sqrMagnitude { get { throw new NotImplementedException(); } }
-        public Vector3 normalized { get { throw new NotImplementedException(); } }
-        public float magnitude { get { throw new NotImplementedException(); } }
+        public float sqrMagnitude { get { return (x * x + y * y + z * z); } }
+        public Vec3 normalized { get { return new Vec3(x / magnitude, y / magnitude, z / magnitude); } }
+        public float magnitude { get { return MathF.Sqrt(x * x + y * y + z * z); } }
         #endregion
 
         #region constants
@@ -130,7 +133,7 @@ namespace CustomMath
         }
         public static float Angle(Vec3 from, Vec3 to)
         {
-            throw new NotImplementedException();
+            return MathF.Acos(Vec3.Dot(from.normalized, to.normalized)) * 180 / MathF.PI;
         }
         public static Vec3 ClampMagnitude(Vec3 vector, float maxLength)
         {
@@ -138,7 +141,7 @@ namespace CustomMath
         }
         public static float Magnitude(Vec3 vector)
         {
-            throw new NotImplementedException();
+            return MathF.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
         }
         public static Vec3 Cross(Vec3 a, Vec3 b)
         {
@@ -152,7 +155,7 @@ namespace CustomMath
         }
         public static float Dot(Vec3 a, Vec3 b)
         {
-            throw new NotImplementedException();
+            return a.x * b.x + a.y * b.y + a.z * b.z;
         }
         public static Vec3 Lerp(Vec3 a, Vec3 b, float t)
         {
@@ -164,27 +167,87 @@ namespace CustomMath
         }
         public static Vec3 Max(Vec3 a, Vec3 b)
         {
-            throw new NotImplementedException();
+            Vec3 MaxPosition;
+
+            if (a.x > b.x)
+            {
+                MaxPosition.x = a.x;
+            }
+            else
+            {
+                MaxPosition.x = b.x;
+            }
+
+            if (a.z > b.z)
+            {
+                MaxPosition.z = a.z;
+            }
+            else
+            {
+                MaxPosition.z = b.z;
+            }
+
+            if (a.y > b.y)
+            {
+                MaxPosition.y = a.y;
+            }
+            else
+            {
+                MaxPosition.y = b.y;
+            }
+
+            return MaxPosition;
         }
         public static Vec3 Min(Vec3 a, Vec3 b)
         {
-            throw new NotImplementedException();
+            Vec3 MinPosition;
+
+            if (a.x < b.x)
+            {
+                MinPosition.x = a.x;
+            }
+            else
+            {
+                MinPosition.x = b.x;
+            }
+
+            if (a.z < b.z)
+            {
+                MinPosition.z = a.z;
+            }
+            else
+            {
+                MinPosition.z = b.z;
+            }
+
+            if (a.y < b.y)
+            {
+                MinPosition.y = a.y;
+            }
+            else
+            {
+                MinPosition.y = b.y;
+            }
+
+            return MinPosition;
         }
         public static float SqrMagnitude(Vec3 vector)
         {
-            throw new NotImplementedException();
+            return (vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
         }
-        public static Vec3 Project(Vec3 vector, Vec3 onNormal) 
+        public static Vec3 Project(Vec3 vector, Vec3 onNormal)
         {
             throw new NotImplementedException();
         }
-        public static Vec3 Reflect(Vec3 inDirection, Vec3 inNormal) 
+        public static Vec3 Reflect(Vec3 inDirection, Vec3 inNormal)
         {
             throw new NotImplementedException();
         }
         public void Set(float newX, float newY, float newZ)
         {
-            throw new NotImplementedException();
+            x = newX;
+            y = newY;
+            z = newZ;
         }
         public void Scale(Vec3 scale)
         {
