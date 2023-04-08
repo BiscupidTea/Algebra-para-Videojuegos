@@ -137,7 +137,7 @@ namespace CustomMath
         }
         public static Vec3 ClampMagnitude(Vec3 vector, float maxLength)
         {
-            throw new NotImplementedException();
+            return vector.magnitude > maxLength ? vector.normalized * maxLength : vector;
         }
         public static float Magnitude(Vec3 vector)
         {
