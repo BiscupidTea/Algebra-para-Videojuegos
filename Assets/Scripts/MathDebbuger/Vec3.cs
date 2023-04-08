@@ -162,11 +162,12 @@ namespace CustomMath
         }
         public static Vec3 Lerp(Vec3 a, Vec3 b, float t)
         {
-            throw new NotImplementedException();
+            Mathf.Clamp(t, 0, 1);
+            return a + (b - a) * t;
         }
         public static Vec3 LerpUnclamped(Vec3 a, Vec3 b, float t)
         {
-            throw new NotImplementedException();
+            return a + (b - a) * t;
         }
         public static Vec3 Max(Vec3 a, Vec3 b)
         {
