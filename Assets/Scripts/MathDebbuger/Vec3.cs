@@ -145,7 +145,10 @@ namespace CustomMath
         }
         public static Vec3 Cross(Vec3 a, Vec3 b)
         {
-            throw new NotImplementedException();
+            float i = (a.y * b.z) - (a.z * b.y);
+            float j = (a.x * b.z) - (a.z * b.x);
+            float k = (a.x * b.y) - (a.y * b.x);
+            return new Vec3(i, -j, k);
         }
         public static float Distance(Vec3 a, Vec3 b)
         {
