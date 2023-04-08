@@ -251,11 +251,15 @@ namespace CustomMath
         }
         public void Scale(Vec3 scale)
         {
-            throw new NotImplementedException();
+            x *= scale.x;
+            y *= scale.y;
+            z *= scale.z;
         }
         public void Normalize()
         {
-            throw new NotImplementedException();
+            x = x / Magnitude(this);
+            y = y / Magnitude(this);
+            z = z / Magnitude(this);
         }
         #endregion
 
