@@ -241,7 +241,16 @@ namespace CustomMath
         }
         public static Vec3 Project(Vec3 vector, Vec3 onNormal)
         {
-            throw new NotImplementedException();
+            float sqrMag = Dot(onNormal, onNormal);
+            if (sqrMag < epsilon)
+            {
+                return Zero;
+            }
+            else
+            {
+                float dot = Dot(vector, onNormal);
+                return onNormal * dot / sqrMag;
+            }
         }
         public static Vec3 Reflect(Vec3 inDirection, Vec3 inNormal)
         {
