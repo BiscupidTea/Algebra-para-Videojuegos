@@ -131,18 +131,41 @@ namespace CustomMath
         {
             return "X = " + x.ToString() + "   Y = " + y.ToString() + "   Z = " + z.ToString();
         }
+        /// <summary>
+        /// Calculate the angle between 2 vectors
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static float Angle(Vec3 from, Vec3 to)
         {
             return MathF.Acos(Vec3.Dot(from.normalized, to.normalized)) * 180 / MathF.PI;
         }
+        /// <summary>
+        /// Returns a copy of vector with its magnitude clamped to maxLength.
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <param name="maxLength"></param>
+        /// <returns></returns>
         public static Vec3 ClampMagnitude(Vec3 vector, float maxLength)
         {
             return vector.magnitude > maxLength ? vector.normalized * maxLength : vector;
         }
+        /// <summary>
+        /// Return magnitude 
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
         public static float Magnitude(Vec3 vector)
         {
             return MathF.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
         }
+        /// <summary>
+        /// Cross Product of two vectors.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static Vec3 Cross(Vec3 a, Vec3 b)
         {
             float i = (a.y * b.z) - (a.z * b.y);
@@ -150,25 +173,57 @@ namespace CustomMath
             float k = (a.x * b.y) - (a.y * b.x);
             return new Vec3(i, -j, k);
         }
+        /// <summary>
+        /// Returns the distance between a and b.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static float Distance(Vec3 a, Vec3 b)
         {
             //pitagoras 
             float distance = MathF.Sqrt(MathF.Pow((a.x - b.x), 2) + MathF.Pow((a.y - b.y), 2) + MathF.Pow((a.z - b.z), 2));
             return distance;
         }
+        /// <summary>
+        /// Dot Product of two vectors.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static float Dot(Vec3 a, Vec3 b)
         {
             return a.x * b.x + a.y * b.y + a.z * b.z;
         }
+        /// <summary>
+        /// Linearly interpolates between two points.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static Vec3 Lerp(Vec3 a, Vec3 b, float t)
         {
             Mathf.Clamp(t, 0, 1);
             return a + (b - a) * t;
         }
+        /// <summary>
+        /// Linearly interpolates between two vectors.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static Vec3 LerpUnclamped(Vec3 a, Vec3 b, float t)
         {
             return a + (b - a) * t;
         }
+        /// <summary>
+        /// Returns a vector that is made from the largest components of two vectors.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static Vec3 Max(Vec3 a, Vec3 b)
         {
             Vec3 MaxPosition;
@@ -202,6 +257,12 @@ namespace CustomMath
 
             return MaxPosition;
         }
+        /// <summary>
+        /// Returns a vector that is made from the smallest components of two vectors.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static Vec3 Min(Vec3 a, Vec3 b)
         {
             Vec3 MinPosition;
@@ -235,10 +296,21 @@ namespace CustomMath
 
             return MinPosition;
         }
+        /// <summary>
+        /// Returns the squared length of this vector.
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
         public static float SqrMagnitude(Vec3 vector)
         {
             return (vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
         }
+        /// <summary>
+        /// Projects a vector onto another vector.
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <param name="onNormal"></param>
+        /// <returns></returns>
         public static Vec3 Project(Vec3 vector, Vec3 onNormal)
         {
             float sqrMag = Dot(onNormal, onNormal);
@@ -252,22 +324,41 @@ namespace CustomMath
                 return onNormal * dot / sqrMag;
             }
         }
+        /// <summary>
+        /// Reflects a vector off the plane defined by a normal.
+        /// </summary>
+        /// <param name="inDirection"></param>
+        /// <param name="inNormal"></param>
+        /// <returns></returns>
         public static Vec3 Reflect(Vec3 inDirection, Vec3 inNormal)
         {
             return inDirection - 2 * (Dot(inDirection, inNormal)) * inNormal;
         }
+        /// <summary>
+        /// Set x, y and z components of an existing Vector3.
+        /// </summary>
+        /// <param name="newX"></param>
+        /// <param name="newY"></param>
+        /// <param name="newZ"></param>
         public void Set(float newX, float newY, float newZ)
         {
             x = newX;
             y = newY;
             z = newZ;
         }
+        /// <summary>
+        /// Multiplies two vectors component-wise.
+        /// </summary>
+        /// <param name="scale"></param>
         public void Scale(Vec3 scale)
         {
             x *= scale.x;
             y *= scale.y;
             z *= scale.z;
         }
+        /// <summary>
+        /// Makes this vector have a magnitude of 1.
+        /// </summary>
         public void Normalize()
         {
             x = x / Magnitude(this);
