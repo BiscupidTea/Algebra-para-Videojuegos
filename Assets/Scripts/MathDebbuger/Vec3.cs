@@ -20,6 +20,7 @@ namespace CustomMath
         #endregion
 
         #region constants
+        //nearest point from 0
         public const float epsilon = 1e-05f;
         #endregion
 
