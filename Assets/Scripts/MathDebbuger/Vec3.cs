@@ -172,7 +172,7 @@ namespace CustomMath
             float i = (a.y * b.z) - (a.z * b.y);
             float j = (a.x * b.z) - (a.z * b.x);
             float k = (a.x * b.y) - (a.y * b.x);
-            return new Vec3(i, -j, k);
+            return new Vec3(i, j, k);
         }
         /// <summary>
         /// Returns the distance between a and b.
