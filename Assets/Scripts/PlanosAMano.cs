@@ -9,39 +9,43 @@ namespace CustomMatematic
     public struct Plano
     {
         public Vec3 normal;
-        public Vec3 vertA;
-        public Vec3 vertB;
-        public Vec3 vertC;
 
         public float distance;
         public Plano flipped => new(-normal, -distance);
 
         #region Constructors
 
+        /// <summary>
+        /// Crea un plano en base a una normal y un punto.
+        /// </summary>
+        /// <param name="inNormal"></param>
+        /// <param name="inPoint"></param>
         public Plano(Vec3 inNormal, Vec3 inPoint)
         {
             this.normal = Vec3.Cross(inNormal, inPoint);
             this.distance = 0 + Vec3.Dot(inNormal, inPoint);
-            vertA = inPoint;
-            vertB = inPoint;
-            vertC = inPoint;
 
         }
+        /// <summary>
+        /// Crea un plano en base a una normal y un float.
+        /// </summary>
+        /// <param name="inNormal"></param>
+        /// <param name="d"></param>
         public Plano(Vec3 inNormal, float d)
         {
             this.normal = inNormal;
             this.distance = d;
-            vertA = normal;
-            vertB = normal;
-            vertC = normal;
         }
+        /// <summary>
+        /// Crea un plano en base a 3 posiciones vec 3.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="c"></param>
         public Plano(Vec3 a, Vec3 b, Vec3 c)
         {
             this.normal = Vec3.Cross(b - a, c - a).normalized;
             this.distance = -Vec3.Dot(this.normal, a);
-            vertA = a;
-            vertB = b;
-            vertC = c;
         }
         #endregion
 
