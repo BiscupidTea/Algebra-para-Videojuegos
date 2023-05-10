@@ -1,6 +1,7 @@
 using CustomMath;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 
 namespace CustomMatematic
@@ -13,6 +14,8 @@ namespace CustomMatematic
         public Vec3 vertC;
 
         public float distance;
+
+        #region Constructors
 
         public Plano(Vec3 inNormal, Vec3 inPoint)
         {
@@ -39,5 +42,20 @@ namespace CustomMatematic
             vertB = b;
             vertC = c;
         }
+        #endregion
+
+        #region Operators
+
+        public static bool operator ==(Plano left, Plano right)
+        {
+            return left.normal == right.normal && left.distance == right.distance;
+        }
+
+        public static bool operator !=(Plano left, Plano right)
+        {
+            return !(left == right);
+        }
+
+        #endregion
     }
 }
