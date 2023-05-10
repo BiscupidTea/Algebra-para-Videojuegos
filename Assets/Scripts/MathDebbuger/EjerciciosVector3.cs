@@ -119,6 +119,8 @@ public class EjerciciosVector3 : MonoBehaviour
     {
         PointEx = Vec3.Reflect(Point1, Point2.normalized);
         PointEx = -PointEx;
+        PointEx = Point1 + Point2;
+        PointEx = (Vector3.Distance(Point1, Point2) * PointEx.normalized);
     }
 
     private void Ejercicio9()
