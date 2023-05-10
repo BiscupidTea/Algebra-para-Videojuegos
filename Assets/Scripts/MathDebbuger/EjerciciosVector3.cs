@@ -130,7 +130,7 @@ public class EjerciciosVector3 : MonoBehaviour
 
     private void Ejercicio10()
     {
-        lerp += Time.deltaTime;
+        lerp -= Time.deltaTime;
         PointEx = Vec3.LerpUnclamped(Point1, Point2, lerp);
 
         if (lerp < -10)
