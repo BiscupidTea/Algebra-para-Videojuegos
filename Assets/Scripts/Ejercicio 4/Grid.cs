@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
-    [SerializeField] private float delta = 0.2f;
+    [SerializeField] private float delta = 1f;
     [SerializeField] private bool active = false;
-    [SerializeField] private static int gridSize = 11;
     [SerializeField] private float gridBallSize = 0.5f;
+    public static int gridSize = 11;
     public static Vec3[,,] grid = new Vec3[gridSize, gridSize, gridSize];
 
     void Start()
@@ -37,7 +37,7 @@ public class Grid : MonoBehaviour
                     for (int z = 0; z < grid.GetLength(2); z++)
                     {
                         Gizmos.color = Color.white;
-                        Gizmos.DrawSphere(new Vec3(x, y, z) * delta, gridBallSize);
+                        Gizmos.DrawWireSphere(new Vec3(x, y, z) * delta, gridBallSize);
                     }
                 }
             }
