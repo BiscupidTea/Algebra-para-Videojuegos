@@ -182,9 +182,12 @@ public class ObjectCollider : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        foreach (Plano plane in planos)
+        if (Application.isPlaying)
         {
-            DrawPlane(plane.normal * plane.distance, plane.normal, Color.blue);
+            foreach (Plano plane in planos)
+            {
+                DrawPlane(plane.normal * plane.distance, plane.normal, Color.blue);
+            }
         }
     }
 }
