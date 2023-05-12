@@ -284,6 +284,8 @@ MonoBehaviour:
   meshes:
   - {fileID: 2067523031}
   - {fileID: 659319167}
+  trueCollision: {fileID: 2100000, guid: 11833583980cf1549ad0ece79a9c05fd, type: 2}
+  falseCollision: {fileID: 2100000, guid: 409751b81b9653847a719d6498269ffa, type: 2}
 --- !u!1 &1244328941
 GameObject:
   m_ObjectHideFlags: 0
