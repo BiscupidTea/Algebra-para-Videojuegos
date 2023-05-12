@@ -20,8 +20,6 @@ public class ObjectCollider : MonoBehaviour
         insidePoints = new List<Vec3>();
         nearestPoints = new List<Vec3>();
 
-
-
         for (int x = 0; x < Grid.grid.GetLength(0); x++)
         {
             for (int y = 0; y < Grid.grid.GetLength(1); y++)
@@ -54,6 +52,19 @@ public class ObjectCollider : MonoBehaviour
             planos.Add(newPlane);
         }
 
+        for (int i = 0; i < planos.Count; i++)
+        {
+            planos[i].Flip();
+        }
+
+        AddNearPoints();
+
+        CheckInsidePoints(mesh);
+
+    }
+
+    private void CheckInsidePoints(Mesh mesh)
+    {
         insidePoints.Clear();
         foreach (Vec3 point in nearestPoints)
         {
@@ -63,11 +74,8 @@ public class ObjectCollider : MonoBehaviour
             {
                 if (IsCollidingPlane(plano, point, out Vec3 collidingPoint))
                 {
-                    Vec3 a = new Vec3(transform.TransformPoint(mesh.vertices[mesh.GetIndices(0)[indice]]));
-                    Vec3 b = new Vec3(transform.TransformPoint(mesh.vertices[mesh.GetIndices(0)[indice + 1]]));
-                    Vec3 c = new Vec3(transform.TransformPoint(mesh.vertices[mesh.GetIndices(0)[indice + 2]]));
 
-                    if (IsValidPlane(plano, collidingPoint, a, b, c))
+                    if (IsValidPlane(plano, collidingPoint, plano.a, plano.b, plano.c))
                     {
                         counter++;
                     }
@@ -75,27 +83,41 @@ public class ObjectCollider : MonoBehaviour
 
                 indice += 3;
             }
+
             if (counter % 2 == 1)
             {
                 insidePoints.Add(point);
             }
         }
+    }
 
-
+    private void AddNearPoints()
+    {
+        nearestPoints.Clear();
+        for (int x = 0; x < Grid.grid.GetLength(0); x++)
+        {
+            for (int y = 0; y < Grid.grid.GetLength(1); y++)
+            {
+                for (int z = 0; z < Grid.grid.GetLength(2); z++)
+                {
+                    nearestPoints.Add(Grid.grid[x, y, z]);
+                }
+            }
+        }
     }
 
     private bool IsCollidingPlane(Plano plano, Vec3 point, out Vec3 collidingPoint)
     {
         collidingPoint = Vec3.Zero;
 
-        float denom = Vec3.Dot(plano.normal, Vec3.Right * 20.0f);
+        float denom = Vec3.Dot(plano.normal, Vec3.Forward * 20.0f);
 
         if (Mathf.Abs(denom) > Vec3.epsilon)
         {
             float t = Vec3.Dot((plano.normal * plano.distance - point), plano.normal) / denom;
             if (t >= Vec3.epsilon)
             {
-                collidingPoint = point + (Vec3.Right * 20.0f) * t;
+                collidingPoint = point + (Vec3.Forward * 20.0f) * t;
                 return true;
             }
         }
@@ -120,6 +142,19 @@ public class ObjectCollider : MonoBehaviour
 
         // Si la suma del area de los 3 triangulos es igual a la del original estamos adentro
         return Math.Abs(area1 + area2 + area3 - areaOrig) < Vec3.epsilon; //fijatse de cambiar pr comparacion aepsilon
+    }
+
+    public bool ComparePoint(Vec3 point)
+    {
+        foreach (var item in insidePoints)
+        {
+            if (point == item)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void DrawPlane(Vec3 position, Vec3 normal, Color color)

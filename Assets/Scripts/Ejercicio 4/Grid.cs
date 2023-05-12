@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
-    [SerializeField] private float delta = 1f;
     [SerializeField] private bool active = false;
     [SerializeField] private float gridBallSize = 0.5f;
+    public static float delta = 1f;
     public static int gridSize = 11;
     public static Vec3[,,] grid = new Vec3[gridSize, gridSize, gridSize];
 

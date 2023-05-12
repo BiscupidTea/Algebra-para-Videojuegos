@@ -13,6 +13,10 @@ namespace CustomMatematic
         public float distance;
         public Plano flipped => new(-normal, -distance);
 
+        public Vec3 a;
+        public Vec3 b;
+        public Vec3 c;
+
         #region Constructors
 
         /// <summary>
@@ -24,6 +28,9 @@ namespace CustomMatematic
         {
             this.normal = Vec3.Cross(inNormal, inPoint);
             this.distance = 0 + Vec3.Dot(inNormal, inPoint);
+            a = inNormal;
+            b = inNormal;
+            c = inNormal;
 
         }
         /// <summary>
@@ -35,6 +42,9 @@ namespace CustomMatematic
         {
             this.normal = inNormal;
             this.distance = d;
+            a = inNormal;
+            b = inNormal;
+            c = inNormal;
         }
         /// <summary>
         /// Crea un plano en base a 3 posiciones vec 3.
@@ -46,6 +56,9 @@ namespace CustomMatematic
         {
             this.normal = Vec3.Cross(b - a, c - a).normalized;
             this.distance = -Vec3.Dot(this.normal, a);
+            this.a = a;
+            this.b = b;
+            this.c = c;
         }
         #endregion
 
