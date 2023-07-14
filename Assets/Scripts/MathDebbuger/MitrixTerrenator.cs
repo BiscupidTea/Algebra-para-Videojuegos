@@ -429,6 +429,7 @@ public class MitrixTerrenator : MonoBehaviour
         }
         public static MatrixMano Transpose(MatrixMano m)
         {
+            //intercambia las columnas por filas
             return new MatrixMano()
             {
                 m12 = m.m21,

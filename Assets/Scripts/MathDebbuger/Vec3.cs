@@ -366,6 +366,15 @@ namespace CustomMath
             y = y / Magnitude(this);
             z = z / Magnitude(this);
         }
+
+        public Vec3 Normalize(Vec3 vec)
+        {
+            this.x = vec.x / Magnitude(this);
+            this.y = vec.y / Magnitude(this);
+            this.z = vec.z / Magnitude(this);
+
+            return this;
+        }
         #endregion
 
         #region Internals

@@ -238,17 +238,60 @@ public class QuaternionAMano : MonoBehaviour
         }
         public static QuaternionMod LookRotation(Vec3 forward, Vec3 upwards)
         {
-            Vec3 dir = (upwards - forward).normalized;
-            Vec3 rotAxis = Vec3.Cross(Vec3.Forward, dir);
-            float dot = Vec3.Dot(Vec3.Forward, dir);
+            //Aca mantiene la relacion entre los ejes
+            Vec3 norm = new Vec3();
+            forward = norm.Normalize(forward);
+            Vec3 right = norm.Normalize(Vec3.Cross(upwards, forward));
+            upwards = Vec3.Cross(forward, right);
 
-            QuaternionMod result;
-            result.x = rotAxis.x;
-            result.y = rotAxis.y;
-            result.z = rotAxis.z;
-            result.w = dot + 1;
+            //Inicializa una matriz 3x3 con la rotacion de los 3 ejes.
+            float m00 = right.x; float m01 = right.y; float m02 = right.z;
+            float m10 = upwards.x; float m11 = upwards.y; float m12 = upwards.z;
+            float m20 = forward.x; float m21 = forward.y; float m22 = forward.z;
 
-            return result.Normalized;
+            // define la diagonal
+            //saber que eje rotar exactamente
+            float diagonals = m00 + m11 + m22;
+            var q = new QuaternionMod();
+            if (diagonals > 0f)
+            {
+                float num = Mathf.Sqrt(diagonals + 1f);
+                q.w = num * 0.5f;
+                num = 0.5f / num;
+                q.x = (m12 - m21) * num;
+                q.y = (m20 - m02) * num;
+                q.z = (m01 - m10) * num;
+                return q;
+            }
+            if (m00 >= m11 && m00 >= m22)
+            {
+                float num = Mathf.Sqrt(1f + m00 - m11 - m22);
+                float num4 = 0.5f / num;
+                q.x = 0.5f * num;
+                q.y = (m01 + m10) * num4;
+                q.z = (m02 + m20) * num4;
+                q.w = (m12 - m21) * num4;
+                return q;
+            }
+            if (m11 > m22)
+            {
+                float num = Mathf.Sqrt(1f + m11 - m00 - m22);
+                float num3 = 0.5f / num;
+                q.x = (m10 + m01) * num3;
+                q.y = 0.5f * num;
+                q.z = (m21 + m12) * num3;
+                q.w = (m20 - m02) * num3;
+                return q;
+            }
+
+            float num5 = Mathf.Sqrt(1f + m22 - m00 - m11);
+            float num2 = 0.5f / num5;
+            q.x = (m20 + m02) * num2;
+            q.y = (m21 + m12) * num2;
+            q.z = 0.5f * num5;
+            q.w = (m01 - m10) * num2;
+
+            return q;
         }
         public static QuaternionMod Normalize(QuaternionMod q)
         {
@@ -278,29 +321,41 @@ public class QuaternionAMano : MonoBehaviour
         }
         public static QuaternionMod SlerpUnclamped(QuaternionMod a, QuaternionMod b, float t)
         {
-            QuaternionMod r;
+            // se chequea que los quaternoiones no sean similares.
+            float dot = Dot(a, b);
+            if (dot >= 1.0f || dot <= -1.0f)
+            {
+                return a;
+            }
+            else if (dot < 0.0f)
+            {
+                b.x = -b.x;
+                b.y = -b.y;
+                b.z = -b.z;
+                b.w = -b.w;
+                dot = -dot;
+            }
 
-            float time = 1 - t;
+            float blendA;
+            float blendB;
+            if (dot < 0.99f)
+            {
+                //Luego se calcula el angulo entre los quaterniones
+                float halfAngle = Mathf.Acos(dot);
+                float sinHalfAngle = Mathf.Sin(halfAngle);
+                float oneOverSinHalfAngle = 1.0f / sinHalfAngle;
+                blendA = Mathf.Sin(halfAngle * (1.0f - t)) * oneOverSinHalfAngle;
+                blendB = Mathf.Sin(halfAngle * t) * oneOverSinHalfAngle;
+            }
+            else
+            {
+                blendA = 1.0f - t;
+                blendB = t;
+            }
 
-            float wa, wb;
+            QuaternionMod result = new QuaternionMod(blendA * a.x + blendB * b.x, blendA * a.y + blendB * b.y, blendA * a.z + blendB * b.z, blendA * a.w + blendB * b.w);
 
-            float angle = Mathf.Acos(Dot(a, b));
-
-            angle = Mathf.Abs(angle);
-
-            float sn = Mathf.Sin(angle);
-
-            wa = Mathf.Sin(time * angle) / sn;
-            wb = Mathf.Sin((1 - time) * angle) / sn;
-
-            r.x = wa * a.x + wb * b.x;
-            r.y = wa * a.y + wb * b.y;
-            r.z = wa * a.z + wb * b.z;
-            r.w = wa * a.w + wb * b.w;
-
-            r.Normalize();
-
-            return r;
+            return Normalize(result);
         }
         public void Set(float new_x, float new_y, float new_z, float new_w)
         {
