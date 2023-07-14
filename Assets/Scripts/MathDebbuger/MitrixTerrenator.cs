@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MitrixTerrenator : MonoBehaviour
 {
-    public struct Matrix4x4
+    public struct MatrixMano
     {
         #region variables
         public float m11;
@@ -26,7 +26,7 @@ public class MitrixTerrenator : MonoBehaviour
         #endregion
 
         #region constructor
-        public Matrix4x4(Vector4 col1, Vector4 col2, Vector4 col3, Vector4 col4)
+        public MatrixMano(Vector4 col1, Vector4 col2, Vector4 col3, Vector4 col4)
         {
             m11 = col1.x;
             m12 = col2.x;
@@ -48,9 +48,9 @@ public class MitrixTerrenator : MonoBehaviour
         #endregion
 
         #region Operators
-        public static Matrix4x4 operator *(Matrix4x4 a, Matrix4x4 b)
+        public static MatrixMano operator *(MatrixMano a, MatrixMano b)
         {
-            Matrix4x4 ret = zero;
+            MatrixMano ret = zero;
             for (int i = 0; i < 4; i++)
             {
                 ret.SetColumn(i, a * b.GetColumn(i));
@@ -58,7 +58,7 @@ public class MitrixTerrenator : MonoBehaviour
             return ret;
         }
 
-        public static Vector4 operator *(Matrix4x4 a, Vector4 v)
+        public static Vector4 operator *(MatrixMano a, Vector4 v)
         {
             Vector4 ret;
             ret.x = (float)((double)a.m11 * (double)v.x + (double)a.m12 * (double)v.y + (double)a.m13 * (double)v.z + (double)a.m14 * (double)v.w);
@@ -68,9 +68,9 @@ public class MitrixTerrenator : MonoBehaviour
             return ret;
         }
 
-        public static bool operator ==(Matrix4x4 a, Matrix4x4 b) => a.GetColumn(0) == b.GetColumn(0) && a.GetColumn(1) == b.GetColumn(1) && a.GetColumn(2) == b.GetColumn(2) && a.GetColumn(3) == b.GetColumn(3);
+        public static bool operator ==(MatrixMano a, MatrixMano b) => a.GetColumn(0) == b.GetColumn(0) && a.GetColumn(1) == b.GetColumn(1) && a.GetColumn(2) == b.GetColumn(2) && a.GetColumn(3) == b.GetColumn(3);
 
-        public static bool operator !=(Matrix4x4 a, Matrix4x4 b) => !(a == b);
+        public static bool operator !=(MatrixMano a, MatrixMano b) => !(a == b);
         #endregion
 
         #region Functions
@@ -184,11 +184,11 @@ public class MitrixTerrenator : MonoBehaviour
                 }
             }
         }
-        public static Matrix4x4 zero
+        public static MatrixMano zero
         {
             get
             {
-                return new Matrix4x4()
+                return new MatrixMano()
                 {
                     m11 = 0.0f,
                     m12 = 0.0f,
@@ -209,11 +209,11 @@ public class MitrixTerrenator : MonoBehaviour
                 };
             }
         }
-        public static Matrix4x4 identity
+        public static MatrixMano identity
         {
             get
             {
-                Matrix4x4 m = zero;
+                MatrixMano m = zero;
                 m.m11 = 1.0f;
                 m.m22 = 1.0f;
                 m.m33 = 1.0f;
@@ -225,7 +225,7 @@ public class MitrixTerrenator : MonoBehaviour
         {
             get
             {
-                Matrix4x4 m = this;
+                MatrixMano m = this;
                 Quaternion q = new Quaternion();
                 q.w = Mathf.Sqrt(Mathf.Max(0, 1 + m[0, 0] + m[1, 1] + m[2, 2])) / 2;
                 q.x = Mathf.Sqrt(Mathf.Max(0, 1 + m[0, 0] - m[1, 1] - m[2, 2])) / 2;
@@ -256,11 +256,16 @@ public class MitrixTerrenator : MonoBehaviour
             }
         }
         public float determinant => Determinant(this);
-        public Matrix4x4 transpose => Transpose(this);
-        public Matrix4x4 inverse => Inverse(this);
-
-        public static float Determinant(Matrix4x4 m)
+        public MatrixMano transpose => Transpose(this);
+        public MatrixMano inverse => Inverse(this);
+       
+        public static float Determinant(MatrixMano m)
         {
+            //uso el teoream de laplace
+
+            //El determinante de una matriz es igual a la suma de los productos (resultado de la multiplicacion) de cada elemento
+            //de una fila o columna por el determinante de la fila o columna que se encuentra al lado. 
+
             return
                 m[0, 3] * m[1, 2] * m[2, 1] * m[3, 0] - m[0, 2] * m[1, 3] * m[2, 1] * m[3, 0] -
                 m[0, 3] * m[1, 1] * m[2, 2] * m[3, 0] + m[0, 1] * m[1, 3] * m[2, 2] * m[3, 0] +
@@ -275,13 +280,14 @@ public class MitrixTerrenator : MonoBehaviour
                 m[0, 2] * m[1, 0] * m[2, 1] * m[3, 3] - m[0, 0] * m[1, 2] * m[2, 1] * m[3, 3] -
                 m[0, 1] * m[1, 0] * m[2, 2] * m[3, 3] + m[0, 0] * m[1, 1] * m[2, 2] * m[3, 3];
         }
-        public static Matrix4x4 Inverse(Matrix4x4 m)
+        public static MatrixMano Inverse(MatrixMano m)
         {
             float detA = Determinant(m);
             if (detA == 0)
                 return zero;
 
-            Matrix4x4 aux = new Matrix4x4()
+            //matriz auxiliar en la cual se guarda la determinante de cada una de esas posiciones.
+            MatrixMano aux = new MatrixMano()
             {
                 //-------1---------
                 m11 = m.m22 * m.m33 * m.m44 + m.m23 * m.m34 * m.m42 + m.m24 * m.m32 * m.m43 - m.m22 * m.m34 * m.m43 - m.m23 * m.m32 * m.m44 - m.m24 * m.m33 * m.m42,
@@ -305,7 +311,8 @@ public class MitrixTerrenator : MonoBehaviour
                 m44 = m.m11 * m.m22 * m.m33 + m.m12 * m.m23 * m.m31 + m.m13 * m.m21 * m.m32 - m.m11 * m.m23 * m.m32 - m.m12 * m.m21 * m.m33 - m.m13 * m.m22 * m.m31
             };
 
-            Matrix4x4 ret = new Matrix4x4()
+            //Divide las posiciones por el determinante para invertirlos.
+            MatrixMano ret = new MatrixMano()
             {
                 m11 = aux.m11 / detA,
                 m12 = aux.m12 / detA,
@@ -325,23 +332,29 @@ public class MitrixTerrenator : MonoBehaviour
                 m44 = aux.m44 / detA
 
             };
+            //matriz invertida
             return ret;
         }
-        public static Matrix4x4 Rotate(Quaternion q)
+        public static MatrixMano Rotate(Quaternion q)
         {
+            //Obtengo la rotacion con un quaternion.
             double num1 = q.x * 2f;
             double num2 = q.y * 2f;
             double num3 = q.z * 2f;
+
             double num4 = q.x * num1;
             double num5 = q.y * num2;
             double num6 = q.z * num3;
             double num7 = q.x * num2;
             double num8 = q.x * num3;
             double num9 = q.y * num3;
+
             double num10 = q.w * num1;
             double num11 = q.w * num2;
             double num12 = q.w * num3;
-            Matrix4x4 m;
+
+            //Genero la rotacion de la matrix.
+            MatrixMano m;
             m.m11 = (float)(1.0 - num5 + num6);
             m.m21 = (float)(num7 + num12);
             m.m31 = (float)(num8 - num11);
@@ -358,53 +371,65 @@ public class MitrixTerrenator : MonoBehaviour
             m.m24 = 0.0f;
             m.m34 = 0.0f;
             m.m44 = 1f;
+
             return m;
         }
-        public static Matrix4x4 Scale(Vec3 v)
+        public static MatrixMano Scale(Vec3 v)
         {
-            Matrix4x4 m;
+            //Se le asignas los valores X, Y, Z del vector a la diagonal (m00, m11, m22).
+            //La varianle m33 se le asigna 1 ya que tambien es parte de la diagonal.
+            MatrixMano m;
             m.m11 = v.x;
             m.m21 = 0.0f;
             m.m31 = 0.0f;
             m.m41 = 0.0f;
             m.m12 = 0.0f;
+
             m.m22 = v.y;
             m.m32 = 0.0f;
             m.m42 = 0.0f;
             m.m13 = 0.0f;
             m.m23 = 0.0f;
+
             m.m33 = v.z;
             m.m43 = 0.0f;
             m.m14 = 0.0f;
             m.m24 = 0.0f;
             m.m34 = 0.0f;
             m.m44 = 1f;
+
             return m;
         }
-        public static Matrix4x4 Translate(Vec3 v)
+        public static MatrixMano Translate(Vec3 v)
         {
-            Matrix4x4 m;
+            //Se le asignan los valores XYZ a los valores del vector a las variables (m03, m13, m23).
+            //A la diagonal se la setea en 1.
+            MatrixMano m;
             m.m11 = 1f;
             m.m21 = 0.0f;
             m.m31 = 0.0f;
+
             m.m41 = v.x;
             m.m12 = 0.0f;
             m.m22 = 1f;
             m.m32 = 0.0f;
+
             m.m42 = v.y;
             m.m13 = 0.0f;
             m.m23 = 0.0f;
             m.m33 = 1f;
+
             m.m43 = v.z;
             m.m14 = 0.0f;
             m.m24 = 0.0f;
             m.m34 = 0.0f;
             m.m44 = 1f;
+
             return m;
         }
-        public static Matrix4x4 Transpose(Matrix4x4 m)
+        public static MatrixMano Transpose(MatrixMano m)
         {
-            return new Matrix4x4()
+            return new MatrixMano()
             {
                 m12 = m.m21,
                 m13 = m.m31,
@@ -420,10 +445,9 @@ public class MitrixTerrenator : MonoBehaviour
                 m43 = m.m34,
             };
         }
-        public static Matrix4x4 TRS(Vec3 pos, Quaternion q, Vec3 s)
+        public static MatrixMano TRS(Vec3 pos, Quaternion q, Vec3 s)
         {
             return (Translate(pos) * Rotate(q) * Scale(s));
-
         }
         public Vector4 GetColumn(int i)
         {
@@ -512,5 +536,4 @@ public class MitrixTerrenator : MonoBehaviour
         }
         #endregion
     }
-
 }
